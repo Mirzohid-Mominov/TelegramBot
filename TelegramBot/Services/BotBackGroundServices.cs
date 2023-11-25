@@ -7,12 +7,12 @@ namespace TelegramBot.Services
     public class BotBackGroundServices : BackgroundService
     {
         private readonly ILogger<BackgroundService> _logger;
-        private readonly ITelegramBotClient _client;
+        private readonly TelegramBotClient _client;
         private readonly IUpdateHandler _handler;
 
         public BotBackGroundServices(
             ILogger<BackgroundService> logger, 
-            ITelegramBotClient client,
+            TelegramBotClient client,
             IUpdateHandler handler)
         {
             _client = client;
