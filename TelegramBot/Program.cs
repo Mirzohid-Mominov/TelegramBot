@@ -15,22 +15,21 @@ namespace TelegramBot
             //builder.Services.AddSingleton<ITelegramBotClient, TelegramBotClient>();
 
             builder.Services.AddSingleton(p => new TelegramBotClient(token));
-            builder.Services.AddHostedService<BotBackGroundServices>();
             builder.Services.AddSingleton<IUpdateHandler, BotUpdateHandler>();
+            builder.Services.AddHostedService<BotBackGroundServices>();
 
             builder.Services.AddLocalization();
 
             var app = builder.Build();
+            
+            var supportedCultures = new[] {"uz-UZ", "en-US", "ru-RU" };
 
-            builder.Services.Configure<RequestLocalizationOptions>(options =>
-            {
-                var supportedCultures = new[] { "en-US", "fr" };
-                options.SetDefaultCulture(supportedCultures[0])
-                    .AddSupportedCultures(supportedCultures)
-                    .AddSupportedUICultures(supportedCultures);
-            });
-
-            //app.UseRequestLocalization(localizationOptions);
+            var localizationOptions = new RequestLocalizationOptions()
+                .SetDefaultCulture(supportedCultures[0])
+                .AddSupportedCultures(supportedCultures)
+                .AddSupportedUICultures(supportedCultures);
+            
+            app.UseRequestLocalization(localizationOptions);
 
             app.Run();
         }

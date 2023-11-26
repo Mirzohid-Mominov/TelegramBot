@@ -5,7 +5,6 @@ using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using TelegramBot.Resources;
-using TelegramBot.Services;
 
 namespace TelegramBot.Services;
 
@@ -23,7 +22,7 @@ public partial class BotUpdateHandler : IUpdateHandler
 
     public Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Error Occured with Telegram Bot: {e.Message}", exception);
+        _logger.LogInformation("Error Occured with Telegram Bot: {ex.Message}", exception);
 
         return Task.CompletedTask;
     }
@@ -31,6 +30,9 @@ public partial class BotUpdateHandler : IUpdateHandler
     public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
         var culture = new CultureInfo("en-US");
+
+        CultureInfo.CurrentCulture = culture;
+        CultureInfo.CurrentUICulture = culture;
 
         using var scope = _scopeFactory.CreateScope();
 

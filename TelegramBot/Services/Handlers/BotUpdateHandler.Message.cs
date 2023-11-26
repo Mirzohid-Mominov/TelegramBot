@@ -30,7 +30,7 @@ public partial class BotUpdateHandler
         return Task.CompletedTask;
     }
 
-    private async Task HandleTextMessageAsync(ITelegramBotClient client, Message message, CancellationToken cancellationToken)
+    private async Task HandleTextMessageAsync(ITelegramBotClient client, Message message, CancellationToken token)
     {
         var from = message.From;
 
@@ -40,7 +40,7 @@ public partial class BotUpdateHandler
             chatId: message.Chat.Id,
             text: _localizer["greeting"],
             replyToMessageId: message.MessageId, 
-            cancellationToken: cancellationToken);
+            cancellationToken: token);
 
     }
 }
