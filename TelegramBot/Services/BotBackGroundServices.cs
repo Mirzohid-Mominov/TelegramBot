@@ -33,7 +33,8 @@ namespace TelegramBot.Services
                 new ReceiverOptions()
                 {
                     ThrowPendingUpdates = true,
-                }, stoppingToken);
+                }, 
+                stoppingToken);
         }
     }
 }
