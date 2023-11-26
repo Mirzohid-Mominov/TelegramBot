@@ -13,6 +13,7 @@ public partial class BotUpdateHandler : IUpdateHandler
     private readonly ILogger<BotUpdateHandler> _logger;
     private readonly IServiceScopeFactory _scopeFactory;
     private IStringLocalizer _localizer;
+    private UserService _userService;
 
     public BotUpdateHandler(ILogger<BotUpdateHandler> logger, IServiceScopeFactory scopeFactory)
     {
@@ -29,6 +30,8 @@ public partial class BotUpdateHandler : IUpdateHandler
 
     public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
+        await SetCultureForUser(update);
+
         var culture = new CultureInfo("en-US");
 
         CultureInfo.CurrentCulture = culture;
@@ -37,6 +40,8 @@ public partial class BotUpdateHandler : IUpdateHandler
         using var scope = _scopeFactory.CreateScope();
 
         _localizer = scope.ServiceProvider.GetRequiredService<IStringLocalizer<BotLocalizer>>();
+
+        _userService = scope.ServiceProvider.GetRequiredService<UserService>();
 
         var handler = update.Type switch
         {
@@ -54,6 +59,20 @@ public partial class BotUpdateHandler : IUpdateHandler
         {
             await HandlePollingErrorAsync(botClient, ex, cancellationToken);
         }
+    }
+
+    private async Task SetCultureForUser(Update update)
+    {
+        var from = update.Type switch
+        {
+            UpdateType.Message => update.Message?.From,
+            UpdateType.EditedMessage => update.EditedMessage?.From,
+            UpdateType.CallbackQuery => update.CallbackQuery?.From,
+            UpdateType.InlineQuery => update.InlineQuery?.From,
+            _ => update.Message?.From
+        };
+
+        var user = await _userService.GetUserAsync(from.Id);
     }
 
     private Task HandleUnknownUpdate(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)

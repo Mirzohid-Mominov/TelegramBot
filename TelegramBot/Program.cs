@@ -18,6 +18,8 @@ namespace TelegramBot
             builder.Services.AddSingleton<IUpdateHandler, BotUpdateHandler>();
             builder.Services.AddHostedService<BotBackGroundServices>();
 
+            builder.Services.AddScoped<UserService>();
+
             builder.Services.AddLocalization();
 
             var app = builder.Build();
