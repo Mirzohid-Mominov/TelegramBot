@@ -18,7 +18,19 @@ namespace TelegramBot
             builder.Services.AddHostedService<BotBackGroundServices>();
             builder.Services.AddSingleton<IUpdateHandler, BotUpdateHandler>();
 
+            builder.Services.AddLocalization();
+
             var app = builder.Build();
+
+            builder.Services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[] { "en-US", "fr" };
+                options.SetDefaultCulture(supportedCultures[0])
+                    .AddSupportedCultures(supportedCultures)
+                    .AddSupportedUICultures(supportedCultures);
+            });
+
+            //app.UseRequestLocalization(localizationOptions);
 
             app.Run();
         }
